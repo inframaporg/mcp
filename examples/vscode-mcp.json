@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "inframap": {
+      "type": "http",
+      "url": "https://mcp.inframap.pro/mcp"
+    }
+  }
+}

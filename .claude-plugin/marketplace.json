@@ -1,0 +1,15 @@
+{
+  "name": "inframap",
+  "description": "InfraMap's plugin for Claude Code: US power plant and grid evidence through the inframap MCP server, plus a research skill.",
+  "owner": {
+    "name": "InfraMap",
+    "email": "contact@inframap.org"
+  },
+  "plugins": [
+    {
+      "name": "inframap",
+      "source": "./",
+      "description": "The inframap MCP server plus the InfraMap research skill."
+    }
+  ]
+}

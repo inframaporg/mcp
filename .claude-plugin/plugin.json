@@ -1,0 +1,27 @@
+{
+  "name": "inframap",
+  "displayName": "InfraMap",
+  "version": "0.3.0",
+  "description": "US power plant and grid evidence from InfraMap: the inframap MCP server plus a skill that tells Claude how to report energy data with sources, units, coverage and observed versus modeled labels.",
+  "author": {
+    "name": "InfraMap",
+    "email": "contact@inframap.org",
+    "url": "https://www.inframap.pro"
+  },
+  "homepage": "https://mcp.inframap.pro",
+  "keywords": [
+    "energy",
+    "power plants",
+    "electricity",
+    "grid",
+    "EIA",
+    "market prices",
+    "curtailment"
+  ],
+  "icon": "./assets/icon.png",
+  "documentationUrl": "https://mcp.inframap.pro",
+  "supportUrl": "https://mcp.inframap.pro/#support",
+  "privacyPolicyUrl": "https://www.inframap.pro/privacy",
+  "termsOfServiceUrl": "https://www.inframap.pro/terms",
+  "repository": "https://github.com/inframaporg/mcp"
+}

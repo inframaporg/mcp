@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "inframap": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.inframap.pro/mcp"
+      ]
+    }
+  }
+}

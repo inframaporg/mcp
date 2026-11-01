@@ -1,0 +1,3 @@
+# ~/.codex/config.toml, or .codex/config.toml in a trusted project
+[mcp_servers.inframap]
+url = "https://mcp.inframap.pro/mcp"
