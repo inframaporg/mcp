@@ -3,7 +3,7 @@
   "name": "pro.inframap/mcp",
   "title": "InfraMap",
   "description": "US power plant, generation, price, curtailment and water data, with sources on every result.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "websiteUrl": "https://mcp.inframap.pro",
   "icons": [
     {
