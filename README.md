@@ -1,6 +1,6 @@
 # InfraMap MCP server
 
-The InfraMap MCP server gives AI assistants read-only access to InfraMap Pro's US power market data: every operating US power plant with its generation, emissions, ownership and offtake, plus ISO node prices, hub prices and basis in seven markets. It has 43 tools, and every result carries its sources, period and coverage.
+The InfraMap MCP server gives AI assistants read-only access to InfraMap Pro's US power market data: every operating US power plant with its generation, emissions, ownership and offtake, plus ISO node prices, hub prices and basis in seven markets, ancillary service prices, binding constraints, capacity auctions, interconnection queues, outages and forecasts. It has 59 tools, and every result carries its sources, period and coverage.
 
 - **Server URL:** `https://mcp.inframap.pro/mcp` (Streamable HTTP)
 - **Sign-in:** OAuth. Your client opens the InfraMap sign-in page the first time it connects.
@@ -116,7 +116,7 @@ Config files for each client are in [examples/](examples/).
 
 ## Tools
 
-All 43 tools are read-only. Start with `get_data_catalog` to see what each dataset covers and how current it is.
+All 59 tools are read-only. Start with `get_data_catalog` to see what each dataset covers and how current it is.
 
 ### Analyst store
 
@@ -139,6 +139,7 @@ What data exists, how current it is, and which tool reads it.
 | `get_source_catalog` | **List loaded source datasets.** Loaded source tables (water, boiler fuel, utilities, gas operators, EQR contracts, modeled renewable profiles) with grain, fields and caveats. |
 | `get_analysis_guide` | **Get analysis guide.** Reviewed terminology, formulas, study checklists and primary references for study design. |
 | `explain_analysis_limit` | **Explain an analysis limit.** Explains a known gap, the inputs it would need and the closest supported alternative. |
+| `get_data_coverage` | **Get data coverage.** What InfraMap holds now for each market dataset, ISO and product: first and latest day, missing days, the longest gap, last write and backfill progress, with source, licence and units. |
 
 ### Projects and regions
 
@@ -175,7 +176,7 @@ Live 5-minute prices, node and hub prices, basis, period analysis and modeled re
 | Tool | What it does |
 | --- | --- |
 | `get_eqr_hourly_sales` | **Get FERC EQR hourly sales.** Seller-reported hourly sales by delivery point for about 430 plants in 2026 Q2. Reported sales, not metered generation. |
-| `get_live_prices` | **Get live 5-minute prices.** The newest 5-minute real-time prices at every hub and zone, or up to 8 days at one hub or 2 days at a plant's pricing node, or hourly real-time and day-ahead prices for up to 62 days from the archive, with congestion and loss components and day-ahead against real-time. Updated every 5 minutes in all seven markets. |
+| `get_live_prices` | **Get live 5-minute prices.** The newest 5-minute real-time prices at every hub and zone, or at every pricing node ranked highest or lowest (view nodes, Pro), or up to 8 days at one hub or 2 days at a plant's pricing node, or hourly real-time and day-ahead prices for up to 62 days from the archive, with congestion and loss components and day-ahead against real-time. Updated every 5 minutes in all seven markets. |
 | `get_project_market_prices` | **Get project market prices.** Node coverage or one month of price statistics for a plant outside ERCOT (CAISO, ISO-NE, MISO, NYISO, PJM, SPP). |
 | `get_ercot_project_data` | **Get ERCOT project data.** ERCOT resource net energy (SMNE), node and hub settlement point prices and basis for one month. |
 | `analyze_market_period` | **Analyze a market period.** Prices, basis and coverage for up to 5 projects over up to 12 months in any of the seven markets. |
@@ -221,7 +222,36 @@ Hourly load, fuel mix and carbon intensity by balancing authority, and point wea
 | --- | --- |
 | `get_grid_hourly` | **Get hourly load, fuel mix and carbon.** EIA-930 demand, forecast, net generation, interchange, generation by fuel and hourly CO₂ intensity for up to 4 ISOs or balancing authorities, up to 92 days, updated hourly. |
 | `get_plant_weather` | **Get plant weather.** Hourly hub-height wind, irradiance and temperature at a wind or solar plant from 2010, for windows up to 31 days. |
-| `explain_output_with_weather` | **Check output against weather.** Monthly capacity factor against what the plant's own weather predicts, with months below 60% of expected flagged. A model estimate. |
+| `explain_output_with_weather` | **Check output against weather.** Monthly capacity factor against what the plant's own weather predicts, with months below 60% of expected flagged, for up to 5 plants, or every wind or solar plant in a filter ranked by output against its weather (mode rank). A model estimate. |
+| `get_grid_conditions` | **Get ISO grid conditions.** Each ISO's own 5-minute or hourly load, fuel mix by category, storage and reported curtailment (SPP, CAISO) for up to 14 days, with hourly rows for short windows. |
+| `get_iso_forecasts` | **Get ISO forecasts.** An ISO's load, wind or solar forecast from its stored vintages as it stood at the day-ahead deadline, latest or a chosen time, with the publish time used and the error against actual. |
+| `explain_output_or_price_change` | **Explain a change in output or price.** Why a plant's output or a node's price changed over a window: the change against a baseline, then outages, curtailment, binding constraints and congestion, negative prices, weather, forecast error and queue context, each labeled observed, calculated, modeled or hypothesis, with the evidence that is missing. |
+| `get_outages` | **Get outages.** Generation capability on outage by ISO, category and zone with how far ahead it was reported, or individual outage reports with every unit or facility ranked by time and MW out: CAISO and ERCOT units, NYISO and ISO-NE transmission. Up to a year. |
+
+### Constraints, reserves and capacity
+
+Binding transmission constraints with shadow prices, ancillary service prices, capacity auction results and modeled battery revenue.
+
+| Tool | What it does |
+| --- | --- |
+| `get_binding_constraints` | **Get binding constraints.** Constraints that bound in an ISO, day-ahead or real-time, with hours bound and shadow prices, ranked; windows over 31 days (up to four years) rank every constraint from daily totals. |
+| `explain_node_congestion` | **Explain a node's congestion.** Which constraints drove a pricing node's congestion, month by month, from shift factors estimated on 90 days of prices. A statistical estimate. |
+| `get_ancillary_prices` | **Get ancillary service prices.** Regulation, spinning, non-spinning, supplemental, ramp and other reserve prices by service and zone, day-ahead or real-time, for up to a year day-ahead or 92 days real-time, grouped by service class, with monthly means for long windows. |
+| `get_capacity_auctions` | **Get capacity auction results.** PJM, MISO, NYISO and ISO-NE capacity auction clearing prices by zone and delivery period, in the native unit and $/MW-day, with cleared MW and sources. |
+| `rank_pricing_nodes` | **Rank every pricing node.** Every pricing node of one ISO or all seven, ranked in one call by modeled battery revenue, estimated congestion or observed price statistics (mean real-time and day-ahead price, DA-RT spread, negative and spike hours, volatility), with how many nodes were ranked and the plants at each node. |
+| `get_node_battery_revenue` | **Get modeled battery revenue.** What a 1, 2 or 4-hour battery could have earned at a pricing node by month: day-ahead, real-time perfect foresight and day-ahead with reserves. A model estimate. |
+
+### Queues and substations
+
+Every ISO's interconnection queue as daily snapshots, and a substation catalog with the sources behind each field.
+
+| Tool | What it does |
+| --- | --- |
+| `search_interconnection_queue` | **Search interconnection queues.** Queued projects across all seven ISOs by state, county, fuel, status, size, name or point of interconnection, with totals by fuel. |
+| `get_queue_changes` | **Get queue changes.** Projects that entered, withdrew or changed status, size, date or point of interconnection over up to 92 days. |
+| `get_substation` | **Get substation.** A substation's voltage, operator and location with the sources behind each field, and the plants, queue projects and pricing nodes that connect there; or the substation a project connects to. |
+| `find_pricing_nodes` | **Find pricing nodes.** Where pricing nodes are: a node, a project's nodes, the nodes at a substation, a text search or nodes near a point, with type, zone, kV, ISO station, position and confidence, substation, plants and which price products hold them. |
+| `find_substations_nearby` | **Find nearby substations.** Substations within a radius of a project or a point, nearest first, optionally above a voltage. |
 
 ### Water
 
@@ -233,15 +263,21 @@ Plant cooling water and the water stress of each plant’s watershed.
 
 ## Data
 
-Counts as of November 1, 2026. The live figures, periods and caveats for every dataset are on the [data sources page](https://www.inframap.pro/docs/data-sources?utm_source=github&utm_medium=readme).
+Counts as of November 2, 2026. The live figures, periods and caveats for every dataset are on the [data sources page](https://www.inframap.pro/docs/data-sources?utm_source=github&utm_medium=readme), and the first year served in each market is on the [coverage page](https://www.inframap.pro/docs/coverage?utm_source=github&utm_medium=readme).
 
 - **Power plants:** 14,233 operating plants and batteries, grouped into 14,225 projects with 1,391 GW of nameplate capacity, from EIA-860M (August 2026).
 - **Generation:** monthly net generation from EIA-923, January 2000 to July 2026.
 - **Emissions and water:** EPA emissions from 1995 to 2025, cooling water use and water stress.
 - **Prices:** hourly day-ahead and real-time node prices, hub prices and basis at 3,466 plant pricing nodes in CAISO, ERCOT, ISO-NE, MISO, NYISO, PJM and SPP, plus live five-minute real-time hub prices for all seven.
-- **Load and fuel mix:** hourly EIA-930 demand, forecast, interchange and generation by fuel for every balancing authority, from July 2015.
+- **Load and fuel mix:** hourly EIA-930 demand, forecast, interchange and generation by fuel for every balancing authority, from July 2015, and each ISO's own load, fuel mix and storage every 5 minutes.
+- **Ancillary services:** day-ahead and real-time reserve and regulation prices and cleared MW in all seven markets.
+- **Binding constraints:** day-ahead and real-time shadow prices with a constraint registry, in all seven markets.
+- **Capacity auctions:** PJM, MISO, NYISO and ISO-NE results by zone, in native units and $/MW-day.
+- **Interconnection queues:** daily snapshots of all seven ISO queues with a per-project change log.
+- **Forecasts and outages:** ISO load, wind and solar forecasts with every published vintage kept, and generation outage events or outage MW by type.
+- **Substations:** a catalog of about 80,000 US substations from OpenStreetMap (ODbL), ISO and public sources, with a crosswalk to pricing nodes, plants and queue points.
 - **Ownership and offtake:** owners and parent companies for 3,150 projects, and 2,610 offtake contracts from 473 buyers.
-- **Modeled data:** physical potential, expected generation and modeled curtailment, always labeled as models.
+- **Modeled data:** physical potential, expected generation and modeled curtailment, plus modeled battery revenue per node and estimated shift factors, always labeled as models.
 
 How results are reported:
 
