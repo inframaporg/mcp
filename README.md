@@ -276,7 +276,7 @@ Counts as of November 2, 2026. The live figures, periods and caveats for every d
 - **Interconnection queues:** daily snapshots of all seven ISO queues with a per-project change log.
 - **Forecasts and outages:** ISO load, wind and solar forecasts with every published vintage kept, and generation outage events or outage MW by type.
 - **Substations:** a catalog of about 80,000 US substations from OpenStreetMap (ODbL), ISO and public sources, with a crosswalk to pricing nodes, plants and queue points.
-- **Ownership and offtake:** owners and parent companies for 3,150 projects, and 2,610 offtake contracts from 473 buyers.
+- **Ownership and offtake:** a confirmed ultimate owner for 2,081 projects, and a named contract buyer for 1,422 projects from FERC PPA records and reviewed contracts, 473 buyers in all (as of September 26, 2026).
 - **Modeled data:** physical potential, expected generation and modeled curtailment, plus modeled battery revenue per node and estimated shift factors, always labeled as models.
 
 How results are reported:
